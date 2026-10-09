@@ -11,6 +11,7 @@ A Python simulation for a distributed satellite swarm with **REAL orbital data**
 - Executes autonomous avoidance maneuvers
 - Magnetic docking simulation with eddy current damping
 - Post-maneuver safety verification
+- **Scaled Analysis:** 123 satellites with two-stage pipeline and parallel processing (0.03 sec computation time)
 
 ## Files
 
@@ -26,3 +27,4 @@ Live satellite data from [Space-Track.org](https://www.space-track.org) — US S
 ```bash
 pip install sgp4
 python real_leo_analysis.py
+```
