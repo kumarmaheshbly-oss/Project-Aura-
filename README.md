@@ -12,7 +12,7 @@ A Python simulation for a distributed satellite swarm with **REAL orbital data**
 - Magnetic docking simulation with eddy current damping
 - Post-maneuver safety verification
 - **Scaled Analysis:** 123 satellites with two-stage pipeline and parallel processing (0.03 sec computation time)
-
+- **Scaled Analysis: 499 satellites with two-stage pipeline, parallel processing, and Pc calculation with Monte Carlo uncertainty
 ## Files
 
 - `collision_avoidance.py` — Simulated 5-satellite collision avoidance with magnetic docking
