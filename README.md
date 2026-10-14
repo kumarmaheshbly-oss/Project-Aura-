@@ -30,3 +30,16 @@ Live satellite data from [Space-Track.org](https://www.space-track.org) — US S
 pip install sgp4
 python real_leo_analysis.py
 ```
+## 📸 Visual Results
+
+### 1. 3D Orbit Visualization (ISS vs Hubble - Real TLE Data)
+![3D Orbits](3d_orbits.png)
+
+### 2. Constellation Ring (Walker Delta - 36 Satellites)
+![Satellite Ring](satellite_ring.png)
+
+### 3. Conjunction Assessment (Debris vs Ring)
+![Conjunction Assessment](conjunction_assessment.png)
+
+### 4. Probability of Collision (Foster-1992 Method)
+![Probability of Collision](pc_foster_1992.png)
