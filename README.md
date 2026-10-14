@@ -4,11 +4,10 @@
 A Python simulation for a distributed satellite swarm with **REAL orbital data** from Space-Track (US Space Force).
 
 ## Features
-   
+   Screenshot_20261014_080934_Chrome.jpg
 - **Real Data Analysis:** Uses live TLE data from Space-Track.org (US Space Force)
 - Calculates Time-to-Closest-Approach (TCA)
 - Calculates Distance of Closest Approach (DCA)
-- Screenshot_20261014_080934_Chrome.jpg
 - Simulates 2-second reaction latency
 - Executes autonomous avoidance maneuvers
 - Magnetic docking simulation with eddy current damping
