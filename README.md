@@ -1,3 +1,4 @@
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/kumarmaheshbly-oss/Project-Aura)
 # Project Aura: Real-Time Collision Avoidance
 
 A Python simulation for a distributed satellite swarm with **REAL orbital data** from Space-Track (US Space Force).
