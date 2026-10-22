@@ -5,7 +5,19 @@ A Python simulation for a distributed satellite swarm with **REAL orbital data**
 
 ## Features
 [Satellite Ring]
-https://github.com/kumarmaheshbly-oss/![Satellite Ring](Screenshot_20261014_080934_Chrome.jpg)
+## 📸 Visual Results
+
+### 1. 3D Orbit Visualization
+![3D Orbits](Screenshot_20261014_080934_Chrome.jpg)
+
+### 2. Constellation Ring Simulation
+![Satellite Ring](Screenshot_20261014_081554_Chrome.jpg)
+
+### 3. Conjunction Assessment
+![Conjunction Assessment](Screenshot_20261014_081845_Chrome.jpg)
+
+### 4. Probability of Collision (Foster-1992)
+![Pc Calculation](Screenshot_20261014_082018_Chrome.jpg)
 - **Real Data Analysis:** Uses live TLE data from Space-Track.org (US Space Force)
 - Calculates Time-to-Closest-Approach (TCA)
 - Calculates Distance of Closest Approach (DCA)
