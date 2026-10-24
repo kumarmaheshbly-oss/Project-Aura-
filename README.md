@@ -1,3 +1,4 @@
+- **High-Fidelity Numerical Propagation:** Migrated from SGP4 to Orekit for dynamic force modeling (Gravity & Drag).
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/kumarmaheshbly-oss/Project-Aura)
 # Project Aura: Real-Time Collision Avoidance
 
