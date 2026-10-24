@@ -3,8 +3,8 @@
 
 A Python simulation for a distributed satellite swarm with **REAL orbital data** from Space-Track (US Space Force).
 
-## Features
-[Satellite Ring]
+## Features 
+
 - **High-Fidelity Numerical Propagation:** Migrated from SGP4 to Orekit for dynamic force modeling (Gravity & Drag).
 ## 📸 Visual Results
 
