@@ -48,13 +48,13 @@ python real_leo_analysis.py
 ## 📸 Visual Results
 
 ### 1. 3D Orbit Visualization (ISS vs Hubble - Real TLE Data)
-![3D Orbits](3d_orbits.png)
+![3D Orbits](![3D Orbits](Screenshot_20261014_080934_Chrome.jpg)
 
 ### 2. Constellation Ring (Walker Delta - 36 Satellites)
-![Satellite Ring](satellite_ring.png)
+![Satellite Ring](![Satellite Ring](Screenshot_20261014_081554_Chrome.jpg))
 
 ### 3. Conjunction Assessment (Debris vs Ring)
-![Conjunction Assessment](conjunction_assessment.png)
+![Conjunction Assessment](![Conjunction Assessment](Screenshot_20261014_081845_Chrome.jpg)
 
 ### 4. Probability of Collision (Foster-1992 Method)
-![Probability of Collision](pc_foster_1992.png)
+![Probability of Collision](![Probability of Collision](Screenshot_20261014_082018_Chrome.jpg)
