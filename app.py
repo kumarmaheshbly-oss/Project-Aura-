@@ -3,12 +3,11 @@ import numpy as np
 import plotly.graph_objects as go
 from skyfield.api import EarthSatellite, load
 from datetime import datetime
-import time
 
 # --- Page Config ---
-st.set_page_config(page_title="AURA-SHIELD | Mission Control", page_icon="🛰️", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="AURA-SHIELD OS", page_icon="🛰️", layout="centered")
 
-# --- ULTIMATE CUSTOM CSS (The "Wow" Factor) ---
+# --- ULTIMATE MOBILE-FIRST CSS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
@@ -20,56 +19,18 @@ st.markdown("""
         font-family: 'Share Tech Mono', monospace;
     }
     
-    /* Glassmorphism Metric Cards */
-    .hud-card {
-        background: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 255, 255, 0.2);
-        border-radius: 8px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
-        transition: all 0.3s ease;
-    }
-    .hud-card:hover {
-        border-color: rgba(0, 255, 255, 0.8);
-        box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
-    }
-    .hud-title {
-        font-size: 12px;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    .hud-value {
-        font-size: 24px;
-        color: #00FFFF;
-        font-weight: bold;
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
-    .hud-alert {
-        color: #FF0055;
-        text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
-
-    /* Custom Button */
+    /* Fix Button */
     .stButton > button {
-        background: rgba(0, 255, 255, 0.1);
+        background: rgba(0, 255, 255, 0.05);
         color: #00FFFF;
         border: 1px solid #00FFFF;
-        border-radius: 5px;
+        border-radius: 8px;
         font-family: 'Share Tech Mono', monospace;
         text-transform: uppercase;
         letter-spacing: 1px;
-        transition: all 0.3s;
         width: 100%;
+        padding: 10px;
+        transition: all 0.3s;
     }
     .stButton > button:hover {
         background: #00FFFF;
@@ -77,21 +38,60 @@ st.markdown("""
         box-shadow: 0 0 20px #00FFFF;
     }
     
-    /* Hide Default Elements */
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
-    #MainMenu {visibility: hidden;}
+    /* Responsive Grid for Cards */
+    .hud-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    /* Perfectly Sized Glassmorphism Cards */
+    .hud-card {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 90px; /* Fixed height for perfect uniformity */
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
+    }
+    
+    .hud-title {
+        font-size: 10px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+    
+    .hud-value {
+        font-size: 18px; /* Perfect size for mobile */
+        color: #00FFFF;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        white-space: nowrap; /* Prevents text wrap */
+    }
+    
+    .hud-alert { color: #FF0055; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    /* Hide Streamlit elements */
+    header {visibility: hidden;} footer {visibility: hidden;} #MainMenu {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
 # --- Header ---
-st.markdown("<h1 style='text-align: center; color: #00FFFF; text-shadow: 0 0 20px #00FFFF; margin-bottom: 0;'>AURA-SHIELD OS</h1>", unsafe_allow_html=True)
-st.markdown(f"<p style='text-align: center; color: #4ade80; font-size: 12px;'>SYSTEM LIVE | UTC {datetime.utcnow().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #00FFFF; text-shadow: 0 0 15px #00FFFF; margin-bottom: 0; font-size: 24px;'>AURA-SHIELD OS</h1>", unsafe_allow_html=True)
+st.markdown(f"<p style='text-align: center; color: #4ade80; font-size: 11px; margin-top: 0;'>SYSTEM LIVE | UTC {datetime.utcnow().strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
 
 # --- Controls ---
-col_btn, col_empty = st.columns([1, 3])
-with col_btn:
-    simulate_cam = st.button("🚨 EXECUTE CAM MANEUVER")
+simulate_cam = st.button("🚨 EXECUTE CAM MANEUVER")
 
 # --- Core Logic ---
 ts = load.timescale()
@@ -117,56 +117,65 @@ status_class = "hud-alert" if pc > 1e-4 else ""
 status_text = "CRITICAL" if pc > 1e-4 else "SECURE"
 
 st.markdown(f"""
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px;">
+    <div class="hud-grid">
         <div class="hud-card">
-            <div class="hud-title">Miss Distance</div>
+            <div class="hud-title">MISS DISTANCE</div>
             <div class="hud-value">{min_dist:.1f} km</div>
         </div>
         <div class="hud-card">
-            <div class="hud-title">Probability (Pc)</div>
+            <div class="hud-title">PROBABILITY (Pc)</div>
             <div class="hud-value">{pc:.2e}</div>
         </div>
         <div class="hud-card">
-            <div class="hud-title">Time to TCA</div>
+            <div class="hud-title">TIME-TO-TCA</div>
             <div class="hud-value">{tca_time} m</div>
         </div>
         <div class="hud-card">
-            <div class="hud-title">System Status</div>
+            <div class="hud-title">STATUS</div>
             <div class="hud-value {status_class}">{status_text}</div>
         </div>
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
-
-# --- The Ultra 3D Graph ---
+# --- 3D Graph (Clean Mode) ---
 fig = go.Figure()
 
-# Add a glowing Earth wireframe (Hidden axes for cleaner look)
+# Earth
 u, v = np.mgrid[0:2*np.pi:30j, 0:np.pi:15j]
 xe = 6371 * np.cos(u)*np.sin(v)
 ye = 6371 * np.sin(u)*np.sin(v)
 ze = 6371 * np.cos(v)
-fig.add_trace(go.Surface(x=xe, y=ye, z=ze, colorscale='Blues', opacity=0.15, showscale=False, hoverinfo='skip'))
+fig.add_trace(go.Surface(x=xe, y=ye, z=ze, colorscale='Blues', opacity=0.1, showscale=False, hoverinfo='skip'))
 
-# Satellites (Neon Colors)
-fig.add_trace(go.Scatter3d(x=pos_a[0], y=pos_a[1], z=pos_a[2], mode='lines', name='ISS', line=dict(color='#00FFFF', width=4), hoverinfo='name'))
-fig.add_trace(go.Scatter3d(x=pos_b[0], y=pos_b[1], z=pos_b[2], mode='lines', name='STARLINK', line=dict(color='#FF0055', width=4), hoverinfo='name'))
+# Satellites
+fig.add_trace(go.Scatter3d(x=pos_a[0], y=pos_a[1], z=pos_a[2], mode='lines', name='ISS', line=dict(color='#00FFFF', width=4), hoverinfo='skip'))
+fig.add_trace(go.Scatter3d(x=pos_b[0], y=pos_b[1], z=pos_b[2], mode='lines', name='STARLINK', line=dict(color='#FF0055', width=4), hoverinfo='skip'))
 
-# TCA Point (Yellow Glowing X)
 if not simulate_cam:
-    fig.add_trace(go.Scatter3d(x=[pos_a[0][min_index]], y=[pos_a[1][min_index]], z=[pos_a[2][min_index]], mode='markers', name='TCA', marker=dict(color='#FFFF00', size=8, symbol='x')))
+    fig.add_trace(go.Scatter3d(x=[pos_a[0][min_index]], y=[pos_a[1][min_index]], z=[pos_a[2][min_index]], mode='markers', name='TCA', marker=dict(color='#FFFF00', size=6, symbol='x'), hoverinfo='skip'))
 
+# CLEAN LAYOUT: No axes, No toolbar, No default legend
 fig.update_layout(
     scene=dict(
         xaxis=dict(visible=False), yaxis=dict(visible=False), zaxis=dict(visible=False),
         bgcolor='rgba(0,0,0,0)', aspectmode='cube'
     ),
     paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(l=0, r=0, b=0, t=0), height=500,
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="white"))
+    margin=dict(l=0, r=0, b=0, t=0), height=350,
+    showlegend=False # Hiding Plotly's ugly default legend
 )
-st.plotly_chart(fig, use_container_width=True)
+
+# config={'displayModeBar': False} removes the floating icons on top
+st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+# --- Custom HTML Legend ---
+st.markdown("""
+    <div style="display: flex; justify-content: center; gap: 15px; font-family: 'Share Tech Mono', monospace; font-size: 12px; margin-bottom: 20px;">
+        <div style="color: #00FFFF;"><span style="color: #00FFFF;">━</span> ISS</div>
+        <div style="color: #FF0055;"><span style="color: #FF0055;">━</span> STARLINK</div>
+        <div style="color: #FFFF00;"><span style="color: #FFFF00;">✖</span> TCA</div>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- Terminal ---
 if simulate_cam:
@@ -180,7 +189,7 @@ else:
     color = "#4ade80"
 
 st.markdown(f"""
-    <div style="background-color: #000; border: 1px solid #333; border-radius: 5px; padding: 15px; font-family: 'Share Tech Mono', monospace; color: {color}; font-size: 14px; height: 100px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);">
+    <div style="background-color: #000; border: 1px solid #333; border-radius: 5px; padding: 10px; font-family: 'Share Tech Mono', monospace; color: {color}; font-size: 11px; height: 70px;">
     {log}
     </div>
 """, unsafe_allow_html=True)
