@@ -4,7 +4,7 @@
 A Python simulation for a distributed satellite swarm with **REAL orbital data** from Space-Track (US Space Force).
 
 ## Features 
-** System Architecture: The MBSE verification plan and interface definitions can be found in the ARCHITECTURE.md file."
+- **System Architecture:** The MBSE verification plan and interface definitions can be found in the [ARCHITECTURE.md](ARCHITECTURE.md) file.
 - **High-Fidelity Numerical Propagation:** Migrated from SGP4 to Orekit for dynamic force modeling (Gravity & Drag).
 ## 📸 Visual Results
 
