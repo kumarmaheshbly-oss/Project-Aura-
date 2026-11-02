@@ -1,0 +1,314 @@
+{
+  "generated_at": "2026-11-02T12:28:48.640159+00:00Z",
+  "version": "AURA-SHIELD v22.0 (Real Data)",
+  "primary": "ISS (ZARYA)",
+  "total_objects_screened": 20,
+  "risk_summary": {
+    "RED": 0,
+    "ORANGE": 0,
+    "YELLOW": 0,
+    "GREEN": 20
+  },
+  "results": [
+    {
+      "secondary": "STARLINK-1007",
+      "tca": "2026-11-02T22:08:12.000Z",
+      "miss_distance_m": 332737.5,
+      "relative_speed_km_s": 11.5847,
+      "rtn_m": {
+        "radial": -108403.7,
+        "in_track": -216184.5,
+        "cross_track": -228532.6
+      },
+      "pc_foster_exact": 1.7459524218841233e-11,
+      "pc_foster_fast": 1.7241280166256226e-11,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-1073",
+      "tca": "2026-11-02T12:24:04.000Z",
+      "miss_distance_m": 8957229.0,
+      "relative_speed_km_s": 10.0393,
+      "rtn_m": {
+        "radial": 5776249.3,
+        "in_track": 6653448.9,
+        "cross_track": 1611990.2
+      },
+      "pc_foster_exact": 5.641592922297631e-12,
+      "pc_foster_fast": 5.571073010762395e-12,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-4518",
+      "tca": "2026-11-02T16:31:08.000Z",
+      "miss_distance_m": 6244504.4,
+      "relative_speed_km_s": 31.0666,
+      "rtn_m": {
+        "radial": 6244340.6,
+        "in_track": -44501.9,
+        "cross_track": 8040.4
+      },
+      "pc_foster_exact": 1.6509367019645946e-23,
+      "pc_foster_fast": 1.6302999678791312e-23,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-1019",
+      "tca": "2026-11-03T06:36:36.000Z",
+      "miss_distance_m": 3737285.3,
+      "relative_speed_km_s": 3.7853,
+      "rtn_m": {
+        "radial": 3737166.0,
+        "in_track": 2893.5,
+        "cross_track": -29713.4
+      },
+      "pc_foster_exact": 4.958380077063364e-27,
+      "pc_foster_fast": 4.8963999670041125e-27,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-2169",
+      "tca": "2026-11-03T06:52:36.000Z",
+      "miss_distance_m": 2050827.7,
+      "relative_speed_km_s": 5.7603,
+      "rtn_m": {
+        "radial": 2050787.5,
+        "in_track": -11925.8,
+        "cross_track": 4734.5
+      },
+      "pc_foster_exact": 4.641187592629402e-160,
+      "pc_foster_fast": 4.583089810492683e-160,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-30777",
+      "tca": "2026-11-02T12:40:08.000Z",
+      "miss_distance_m": 9121480.7,
+      "relative_speed_km_s": 11.1852,
+      "rtn_m": {
+        "radial": 6060006.8,
+        "in_track": 6199428.3,
+        "cross_track": 2836338.7
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-31784",
+      "tca": "2026-11-02T12:44:20.000Z",
+      "miss_distance_m": 1692510.6,
+      "relative_speed_km_s": 11.2742,
+      "rtn_m": {
+        "radial": 152347.2,
+        "in_track": 1130103.3,
+        "cross_track": 1250699.4
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-37410",
+      "tca": "2026-11-03T10:18:28.000Z",
+      "miss_distance_m": 1774517.5,
+      "relative_speed_km_s": 14.8668,
+      "rtn_m": {
+        "radial": 189558.3,
+        "in_track": -397954.1,
+        "cross_track": -1718898.6
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-5325",
+      "tca": "2026-11-02T23:32:20.000Z",
+      "miss_distance_m": 164994.9,
+      "relative_speed_km_s": 13.2541,
+      "rtn_m": {
+        "radial": -149480.1,
+        "in_track": 43477.2,
+        "cross_track": 54669.6
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-4786",
+      "tca": "2026-11-02T23:42:28.000Z",
+      "miss_distance_m": 322943.8,
+      "relative_speed_km_s": 12.851,
+      "rtn_m": {
+        "radial": -144592.3,
+        "in_track": -168323.5,
+        "cross_track": -234633.7
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-1008",
+      "tca": "2026-11-02T12:27:48.000Z",
+      "miss_distance_m": 5080854.3,
+      "relative_speed_km_s": 12.8118,
+      "rtn_m": {
+        "radial": 1959450.2,
+        "in_track": -2801523.8,
+        "cross_track": -3758603.5
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-5605",
+      "tca": "2026-11-03T12:06:36.000Z",
+      "miss_distance_m": 151456.6,
+      "relative_speed_km_s": 12.8,
+      "rtn_m": {
+        "radial": -150404.0,
+        "in_track": 8771.8,
+        "cross_track": 15517.6
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-35841",
+      "tca": "2026-11-03T11:41:24.000Z",
+      "miss_distance_m": 4791156.5,
+      "relative_speed_km_s": 14.2122,
+      "rtn_m": {
+        "radial": 1632465.7,
+        "in_track": -1750190.8,
+        "cross_track": -4150550.4
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-36123",
+      "tca": "2026-11-03T12:12:00.000Z",
+      "miss_distance_m": 261705.0,
+      "relative_speed_km_s": 11.5935,
+      "rtn_m": {
+        "radial": -51994.0,
+        "in_track": -179600.8,
+        "cross_track": -183111.1
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-5285",
+      "tca": "2026-11-03T08:50:28.000Z",
+      "miss_distance_m": 350806.0,
+      "relative_speed_km_s": 13.2652,
+      "rtn_m": {
+        "radial": -143258.7,
+        "in_track": 162725.4,
+        "cross_track": 275793.8
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-1132",
+      "tca": "2026-11-03T12:13:20.000Z",
+      "miss_distance_m": 5752368.4,
+      "relative_speed_km_s": 13.6394,
+      "rtn_m": {
+        "radial": 2518636.4,
+        "in_track": 2629781.0,
+        "cross_track": 4453141.0
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-6045",
+      "tca": "2026-11-03T01:24:32.000Z",
+      "miss_distance_m": 422577.6,
+      "relative_speed_km_s": 10.959,
+      "rtn_m": {
+        "radial": -140975.2,
+        "in_track": 284762.2,
+        "cross_track": 278582.7
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-1123",
+      "tca": "2026-11-03T12:28:00.000Z",
+      "miss_distance_m": 8528475.9,
+      "relative_speed_km_s": 11.6076,
+      "rtn_m": {
+        "radial": 5422970.1,
+        "in_track": 5597573.8,
+        "cross_track": 3463157.9
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-5634",
+      "tca": "2026-11-03T01:24:24.000Z",
+      "miss_distance_m": 335296.7,
+      "relative_speed_km_s": 10.9375,
+      "rtn_m": {
+        "radial": -145963.3,
+        "in_track": 203802.4,
+        "cross_track": 222672.8
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    },
+    {
+      "secondary": "STARLINK-3005",
+      "tca": "2026-11-02T16:58:36.000Z",
+      "miss_distance_m": 145249.3,
+      "relative_speed_km_s": 11.1757,
+      "rtn_m": {
+        "radial": -144834.0,
+        "in_track": -413.7,
+        "cross_track": 10967.6
+      },
+      "pc_foster_exact": 0.0,
+      "pc_foster_fast": 0.0,
+      "pc_mc_2d": 0.0,
+      "risk": "GREEN"
+    }
+  ]
+}
