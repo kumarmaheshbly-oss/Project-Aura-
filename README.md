@@ -5,6 +5,8 @@ A Python simulation for a distributed satellite swarm with **REAL orbital data**
 
 ## Features 
 - **System Architecture:** The MBSE verification plan and interface definitions can be found in the [ARCHITECTURE.md](ARCHITECTURE.md) file.
+- · Live Demo Link: 
+  [🚀 Launch Live Dashboard](https://tgups4uq.streamlit.app/)
 - **High-Fidelity Numerical Propagation:** Migrated from SGP4 to Orekit for dynamic force modeling (Gravity & Drag).
 ## 📸 Visual Results
 
