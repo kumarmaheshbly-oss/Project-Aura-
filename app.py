@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
-import json
+import requests
 import plotly.express as px
 
 # 1. Page Configuration
 st.set_page_config(page_title="Project Aura | SSA Dashboard", page_icon="🛰️", layout="wide")
 
-# Custom CSS for styling
 st.markdown("""
     <style>
     .big-font { font-size:24px !important; font-weight: bold; }
@@ -15,52 +14,49 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("🛰️ Project Aura: Space Situational Awareness")
-st.markdown("**AURA-SHIELD v22.0** | Real-time Conjunction Assessment via Foster Pc Engine")
+st.markdown("**AURA-SHIELD v22.0** | Cloud-Connected Conjunction Assessment")
 
-# 2. Sidebar - File Uploader (Enterprise Feature)
-st.sidebar.header("📁 Data Management")
-uploaded_file = st.sidebar.file_uploader("Upload AURA-SHIELD Report (JSON)", type=["json"])
+# 2. Cloud API Setup
+CLOUD_API_URL = "https://aura-backend-api-7s3j.onrender.com"
 
-report = None
-if uploaded_file is not None:
-    report = json.load(uploaded_file)
-    st.sidebar.success("✅ Custom report loaded successfully!")
-else:
-    # Agar koi file upload nahi karta, toh default file dhundhega
+@st.cache_data(ttl=60) # 60 seconds ka cache taaki baar baar API call na ho
+def fetch_data_from_cloud():
     try:
-        with open("AURA_SHIELD_v22_Report.json", "r") as f:
-            report = json.load(f)
-        st.sidebar.info("Showing default repository data.")
-    except FileNotFoundError:
-        st.error("No data found! Please upload a report JSON from the sidebar.")
-        st.stop()
-    except json.JSONDecodeError:
-        st.error("The default JSON file is corrupted. Please upload a valid report.")
-        st.stop()
+        # Timeout is 60 seconds kyunki free Render server ko 'jagne' me time lagta hai
+        response = requests.get(f"{CLOUD_API_URL}/api/reports/", timeout=60)
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except Exception as e:
+        return None
 
-# 3. Safely Extract Summary (Fixes KeyError)
-# Agar JSON mein risk_summary nahi hai, toh hum results se khud count kar lenge
-summary = report.get("risk_summary")
-if not summary:
-    summary = {"RED": 0, "ORANGE": 0, "YELLOW": 0, "GREEN": 0}
-    for res in report.get("results", []):
-        risk = res.get("risk", "GREEN")
-        if risk in summary:
-            summary[risk] += 1
+with st.spinner("Connecting to Cloud Database... (If the server was asleep, this may take 30-50 seconds)"):
+    data = fetch_data_from_cloud()
 
-results = report.get("results", [])
-primary_obj = report.get("primary", "Unknown")
-version = report.get("version", "Unknown")
-gen_time = report.get("generated_at", "Unknown")
+if data is None:
+    st.error("❌ Could not connect to Cloud API. Please refresh or check the Render server.")
+    st.stop()
+
+# 3. Calculate Metrics
+if len(data) == 0:
+    st.warning("⚠️ No data found in the Cloud Database. Please run the Colab Engine to push new data.")
+    st.stop()
+
+df = pd.DataFrame(data)
+
+# Summary metrics
+total_records = len(df)
+red_alerts = len(df[df['risk'] == 'RED'])
+orange_alerts = len(df[df['risk'] == 'ORANGE'])
+green_alerts = len(df[df['risk'] == 'GREEN'])
 
 # 4. Top Metrics (KPI Cards)
 col1, col2, col3, col4, col5 = st.columns(5)
-
-col1.metric("Primary Object", primary_obj)
-col2.metric("Objects Screened", len(results))
-col3.metric("🔴 RED Alerts", summary.get("RED", 0), delta_color="inverse")
-col4.metric("🟠 ORANGE Alerts", summary.get("ORANGE", 0))
-col5.metric("🟡 YELLOW Alerts", summary.get("YELLOW", 0))
+col1.metric("Primary Object", "ISS (ZARYA)")
+col2.metric("Cloud Records", total_records)
+col3.metric("🔴 RED Alerts", red_alerts, delta_color="inverse")
+col4.metric("🟠 ORANGE Alerts", orange_alerts)
+col5.metric("🟢 GREEN Alerts", green_alerts)
 
 st.divider()
 
@@ -68,73 +64,43 @@ st.divider()
 left_col, right_col = st.columns([2, 1])
 
 with left_col:
-    st.subheader("⚠️ Conjunction Risk Queue")
+    st.subheader("⚠️ Live Conjunction Risk Queue")
     
-    if len(results) == 0:
-        st.info("No objects screened in this run.")
-    else:
-        # Convert results to DataFrame
-        df = pd.DataFrame(results)
-        
-        # Ensure columns exist before displaying
-        display_cols = ["secondary", "risk", "miss_distance_m", "relative_speed_km_s", "pc_foster_exact"]
-        available_cols = [c for c in display_cols if c in df.columns]
-        df_display = df[available_cols].copy()
-        
-        # Rename columns for professional look
-        rename_map = {
-            "secondary": "Secondary Object",
-            "risk": "Risk Level",
-            "miss_distance_m": "Miss Distance (m)",
-            "relative_speed_km_s": "Rel. Speed (km/s)",
-            "pc_foster_exact": "Foster Exact Pc"
-        }
-        df_display.rename(columns=rename_map, inplace=True)
-        
-        # Color code the Risk column
-        def color_risk(val):
-            color = 'red' if val == 'RED' else 'orange' if val == 'ORANGE' else 'yellow' if val == 'YELLOW' else 'green'
-            return f'color: {color}; font-weight: bold'
-        
-        if 'Risk Level' in df_display.columns:
-            st.dataframe(df_display.style.map(color_risk, subset=['Risk Level']), use_container_width=True, height=500)
-        else:
-            st.dataframe(df_display, use_container_width=True, height=500)
+    df_display = df[["secondary_object", "risk", "miss_distance_m", "relative_speed_km_s", "pc_foster_exact"]]
+    df_display.columns = ["Secondary Object", "Risk Level", "Miss Distance (m)", "Rel. Speed (km/s)", "Foster Exact Pc"]
+    
+    def color_risk(val):
+        color = 'red' if val == 'RED' else 'orange' if val == 'ORANGE' else 'yellow' if val == 'YELLOW' else 'green'
+        return f'color: {color}; font-weight: bold'
+    
+    st.dataframe(df_display.style.map(color_risk, subset=['Risk Level']), use_container_width=True, height=400)
 
 with right_col:
     st.subheader("🎯 Top Threat Details")
-    if len(results) > 0:
-        # Sort results by Pc (highest first) to ensure top threat is at index 0
-        sorted_results = sorted(results, key=lambda x: x.get("pc_foster_exact", 0), reverse=True)
-        top_threat = sorted_results[0]
+    
+    top_threat = df.iloc[0]
+    
+    st.info(f"**Object:** {top_threat['secondary_object']}")
+    
+    if top_threat['risk'] == 'RED':
+        st.error(f"**Risk Status:** {top_threat['risk']}")
+    elif top_threat['risk'] == 'ORANGE':
+        st.warning(f"**Risk Status:** {top_threat['risk']}")
+    else:
+        st.success(f"**Risk Status:** {top_threat['risk']}")
         
-        st.info(f"**Object:** {top_threat.get('secondary', 'Unknown')}")
-        
-        risk_status = top_threat.get('risk', 'GREEN')
-        if risk_status == 'RED':
-            st.error(f"**Risk Status:** {risk_status}")
-        elif risk_status == 'ORANGE':
-            st.warning(f"**Risk Status:** {risk_status}")
-        elif risk_status == 'YELLOW':
-            st.warning(f"**Risk Status:** {risk_status}")
-        else:
-            st.success(f"**Risk Status:** {risk_status}")
-            
-        st.write("**RTN Relative Geometry (meters):**")
-        rtn_m = top_threat.get('rtn_m', {})
-        rtn_data = {
-            "Direction": ["Radial", "In-Track", "Cross-Track"],
-            "Distance (m)": [
-                rtn_m.get('radial', 0), 
-                rtn_m.get('in_track', 0), 
-                rtn_m.get('cross_track', 0)
-            ]
-        }
-        st.table(pd.DataFrame(rtn_data))
-        
-        st.caption("Note: RTN values are calculated relative to the Primary's orbit (EME2000 frame).")
+    st.write("**RTN Relative Geometry (meters):**")
+    rtn_data = {
+        "Direction": ["Radial", "In-Track", "Cross-Track"],
+        "Distance (m)": [
+            top_threat['rtn_data'].get('radial', 0), 
+            top_threat['rtn_data'].get('in_track', 0), 
+            top_threat['rtn_data'].get('cross_track', 0)
+        ]
+    }
+    st.table(pd.DataFrame(rtn_data))
 
-# 6. Methodology / Disclaimer Footer
+# 6. Footer
 st.divider()
-st.caption(f"Data generated at: {gen_time} | Engine Version: {version}")
+st.caption(f"Connected to Cloud API: {CLOUD_API_URL}")
 st.caption("Disclaimer: This is a research prototype. Do not use for actual operational collision avoidance.")
