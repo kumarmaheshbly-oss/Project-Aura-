@@ -17,7 +17,7 @@ st.title("🛰️ Project Aura: Space Situational Awareness")
 st.markdown("**AURA-SHIELD v22.0** | Cloud-Connected Conjunction Assessment")
 
 # 2. Cloud API Setup
-CLOUD_API_URL = "https://aura-backend-api-7s3j.onrender.com"
+CLOUD_API_URL = "https://aura-backend-api-rsoj.onrender.com"
 
 @st.cache_data(ttl=60) # 60 seconds ka cache taaki baar baar API call na ho
 def fetch_data_from_cloud():
