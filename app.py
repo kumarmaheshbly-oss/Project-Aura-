@@ -1,4 +1,4 @@
-streamlit run app.py
+
 """
 Project Aura — AURA-SHIELD v24.1
 Space Situational Awareness Dashboard
