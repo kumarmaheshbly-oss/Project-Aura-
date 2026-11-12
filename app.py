@@ -1,6 +1,6 @@
 """
-Project Aura — AURA-SHIELD v24.4 (Maneuver Engine Edition)
-Features: Risk Queue, Analytics, Threat Deep Dive, B-Plane, RTN, CAM
+Project Aura — AURA-SHIELD v24.4 (Clean Edition)
+Features: Risk Queue, Analytics, Threat Deep Dive, B-Plane, RTN, Maneuver Engine
 """
 
 import streamlit as st
@@ -85,8 +85,7 @@ with st.sidebar:
 
     st.subheader("⚙️ Controls")
     hbr_meters = st.slider("Hard Body Radius (m)", 5, 120, 35, 5)
-    auto_refresh = st.toggle("Auto-refresh (60s)", value=False)
-
+    
     st.divider()
     st.subheader("📡 System Telemetry")
     st.markdown("""
@@ -104,7 +103,7 @@ with st.sidebar:
     st.caption("Primary locked: **ISS (ZARYA)**")
 
 # ─────────────────────────────────────────────
-# 4. DATA LAYER (UPDATED TO API-2)
+# 4. DATA LAYER (NEW API URL)
 # ─────────────────────────────────────────────
 CLOUD_API_URL = "https://aura-backend-api-2.onrender.com"
 
@@ -162,6 +161,7 @@ orange = int((df["risk"] == "ORANGE").sum())
 yellow = int((df["risk"] == "YELLOW").sum())
 green = int((df["risk"] == "GREEN").sum())
 
+# Vertical layout for KPIs
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Records", len(df))
 c2.metric("🔴 RED", red)
@@ -287,7 +287,9 @@ with tab3:
 
     st.divider()
     st.markdown("### 🚀 Collision Avoidance Maneuver (CAM)")
-    st.markdown("Calculate the required Delta-V to ensure a 1 km safe separation.")
+    st.markdown("Calculate the required Delta-V to ensure a safe separation.")
+    
+    req_sep = st.number_input("Required Safe Separation (m)", min_value=1000, max_value=10000000, value=1000, step=1000)
     
     if st.button(f"Calculate Maneuver for {threat['secondary_object']}", type="primary"):
         payload = {
@@ -295,7 +297,7 @@ with tab3:
             "miss_distance_m": float(threat['miss_distance_m']),
             "relative_speed_km_s": float(threat['relative_speed_km_s']),
             "time_to_tca_hours": float(threat['hours_to_tca']),
-            "required_separation_m": 1000.0
+            "required_separation_m": float(req_sep)
         }
         
         with st.spinner("Calculating maneuver..."):
