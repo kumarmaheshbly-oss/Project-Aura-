@@ -52,7 +52,6 @@ st.markdown("""
     div[data-testid="stMetric"]:hover {
         transform: translateY(-4px);
         border-color: rgba(56, 189, 248, 0.55);
-        box-shadow: 0 16px 48px rgba(56, 189, 248, 0.18);
     }
     div[data-testid="stMetric"] label { color: #94a3b8 !important; font-size: 0.8rem !important; }
     div[data-testid="stMetric"] [data-testid="stMetricValue"] {
@@ -76,9 +75,7 @@ st.markdown("""
         background: rgba(56, 189, 248, 0.2) !important;
         color: #38bdf8 !important;
         border: 1px solid #38bdf8 !important;
-        box-shadow: 0 0 18px rgba(56, 189, 248, 0.3);
     }
-    h1 { text-shadow: 0 0 28px rgba(56, 189, 248, 0.4); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -168,13 +165,14 @@ with st.sidebar:
 
     st.divider()
     st.subheader("📡 System Status")
-    st.markdown("""
+    pdf_stat = "AVAILABLE" if PDF_AVAILABLE else "Install fpdf2"
+    st.markdown(f"""
     <div style="font-family:monospace;font-size:0.74rem;line-height:1.65;color:#94a3b8;">
     [CORE] Engine: <span style="color:#4ade80">ONLINE</span><br>
     [API] Cloud: <span style="color:#38bdf8">FALLBACK</span><br>
     [CAM] Physics: <span style="color:#4ade80">ADVANCED</span><br>
     [3D] Geometry: <span style="color:#38bdf8">READY</span><br>
-    [PDF] Report: <span style="color:#facc15">""" + ("AVAILABLE" if PDF_AVAILABLE else "Install fpdf2") + """</span><br>
+    [PDF] Report: <span style="color:#facc15">{pdf_stat}</span><br>
     [ANIM] Relative: <span style="color:#4ade80">ACTIVE</span>
     </div>
     """, unsafe_allow_html=True)
@@ -471,4 +469,6 @@ with tab3:
         sig_ct = max(abs(ct)*0.2, 100)
         fig.add_trace(go.Scatter(x=it + sig_it*np.cos(theta), y=ct + sig_ct*np.sin(theta),
                                  mode="lines", name="≈1σ Cov", line=dict(color="#38bdf8", width=1.5, dash="dot"),
-                                 fill="t
+                                 fill="toself", fillcolor="rgba(56,189,248,0.07)"))
+        fig.add_trace(go.Scatter(x=[it], y=[ct], mode="markers+text",
+                                 marker=dic
