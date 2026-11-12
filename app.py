@@ -1,6 +1,6 @@
 """
-Project Aura — AURA-SHIELD v24.2 (Clean Edition)
-Features: Risk Queue, Analytics, Threat Deep Dive, B-Plane, RTN
+Project Aura — AURA-SHIELD v24.4 (Maneuver Engine Edition)
+Features: Risk Queue, Analytics, Threat Deep Dive, B-Plane, RTN, CAM
 """
 
 import streamlit as st
@@ -16,7 +16,7 @@ import io
 # 1. PAGE CONFIG + THEME
 # ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="Project Aura | AURA-SHIELD v24.2",
+    page_title="Project Aura | AURA-SHIELD v24.4",
     page_icon="🛰️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -80,7 +80,7 @@ def extract_rtn(row, key):
 # ─────────────────────────────────────────────
 with st.sidebar:
     st.title("🛰️ Project Aura")
-    st.caption("AURA-SHIELD v24.2 · Enterprise SSA")
+    st.caption("AURA-SHIELD v24.4 · Enterprise SSA")
     st.divider()
 
     st.subheader("⚙️ Controls")
@@ -104,9 +104,9 @@ with st.sidebar:
     st.caption("Primary locked: **ISS (ZARYA)**")
 
 # ─────────────────────────────────────────────
-# 4. DATA LAYER
+# 4. DATA LAYER (UPDATED TO API-2)
 # ─────────────────────────────────────────────
-CLOUD_API_URL = "https://aura-backend-api-rsoj.onrender.com"
+CLOUD_API_URL = "https://aura-backend-api-2.onrender.com"
 
 @st.cache_data(ttl=60, show_spinner=False)
 def fetch_data_from_cloud():
@@ -162,7 +162,6 @@ orange = int((df["risk"] == "ORANGE").sum())
 yellow = int((df["risk"] == "YELLOW").sum())
 green = int((df["risk"] == "GREEN").sum())
 
-# Vertical layout for KPIs (as seen in your screenshot)
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Records", len(df))
 c2.metric("🔴 RED", red)
@@ -238,7 +237,7 @@ with tab2:
         fig_sc.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font=dict(color="#e2e8f0"), height=360, margin=dict(t=50, b=40, l=40, r=20))
         st.plotly_chart(fig_sc, use_container_width=True)
 
-# ─── TAB 3: THREAT DEEP DIVE ─────────────────
+# ─── TAB 3: THREAT DEEP DIVE (WITH CAM) ──────
 with tab3:
     st.subheader("Threat Analysis · B-Plane · RTN")
     
@@ -283,9 +282,40 @@ with tab3:
         fig_bp.add_trace(go.Scatter(x=[0], y=[0], mode="markers", marker=dict(size=12, color="#38bdf8", symbol="x"), name="Primary"))
         fig_bp.add_trace(go.Scatter(x=[0, it], y=[0, ct], mode="lines", line=dict(color="#64748b", width=1, dash="dot"), showlegend=False, hoverinfo="skip"))
         
-        fig_bp.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(15,23,42,0.55)", font=dict(color="#e2e8f0"), height=460, xaxis=dict(title="In-Track (m)", range=[-axis_lim, axis_lim], zeroline=True, zerolinecolor="#334155", gridcolor="#1e293b", scaleanchor="y", scaleratio=1), yaxis=dict(title="Cross-Track (m)", range=[-axis_lim, axis_lim], zeroline=True, zerolinecolor="#334155", gridcolor="#1e293b"), margin=dict(t=40, b=40, l=50, r=20))
+        fig_bp.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(15,23,42,0.55)", font=dict(color="#e2e8f0"), height=400, xaxis=dict(title="In-Track (m)", range=[-axis_lim, axis_lim], zeroline=True, zerolinecolor="#334155", gridcolor="#1e293b", scaleanchor="y", scaleratio=1), yaxis=dict(title="Cross-Track (m)", range=[-axis_lim, axis_lim], zeroline=True, zerolinecolor="#334155", gridcolor="#1e293b"), margin=dict(t=40, b=40, l=50, r=20))
         st.plotly_chart(fig_bp, use_container_width=True)
+
+    st.divider()
+    st.markdown("### 🚀 Collision Avoidance Maneuver (CAM)")
+    st.markdown("Calculate the required Delta-V to ensure a 1 km safe separation.")
+    
+    if st.button(f"Calculate Maneuver for {threat['secondary_object']}", type="primary"):
+        payload = {
+            "object_name": threat['secondary_object'],
+            "miss_distance_m": float(threat['miss_distance_m']),
+            "relative_speed_km_s": float(threat['relative_speed_km_s']),
+            "time_to_tca_hours": float(threat['hours_to_tca']),
+            "required_separation_m": 1000.0
+        }
+        
+        with st.spinner("Calculating maneuver..."):
+            try:
+                res = requests.post(f"{CLOUD_API_URL}/api/maneuver/calculate", json=payload, timeout=15)
+                if res.status_code == 200:
+                    man_data = res.json()
+                    if man_data['maneuver_required']:
+                        st.error(f"⚠️ **Maneuver Required!**")
+                        m1, m2 = st.columns(2)
+                        m1.metric("Required Delta-V", f"{man_data['delta_v_m_s']} m/s")
+                        m2.metric("Estimated Fuel Cost", f"{man_data['fuel_cost_estimate_kg']} kg")
+                        st.info(f"**Direction:** {man_data['direction']} burn")
+                    else:
+                        st.success("✅ No maneuver required. Miss distance is safe.")
+                else:
+                    st.error("Failed to calculate maneuver. Check backend logs.")
+            except Exception as e:
+                st.error(f"Error connecting to Maneuver API: {e}")
 
 # Footer
 st.divider()
-st.caption(f"Connected to Cloud API: {CLOUD_API_URL} | v24.2 Enterprise")
+st.caption(f"Connected to Cloud API: {CLOUD_API_URL} | v24.4 Enterprise")
