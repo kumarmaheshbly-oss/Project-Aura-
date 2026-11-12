@@ -471,4 +471,111 @@ with tab3:
                                  mode="lines", name="≈1σ Cov", line=dict(color="#38bdf8", width=1.5, dash="dot"),
                                  fill="toself", fillcolor="rgba(56,189,248,0.07)"))
         fig.add_trace(go.Scatter(x=[it], y=[ct], mode="markers+text",
-                                 marker=dic
+                                 marker=dict(size=14, color="#38bdf8", line=dict(width=2, color="white")),
+                                 text=["Threat"], textposition="top center", name="Secondary"))
+        fig.add_trace(go.Scatter(x=[0], y=[0], mode="markers",
+                                 marker=dict(size=12, color="#f87171", symbol="x"), name="Primary"))
+
+        lim = max(abs(it), abs(ct), hbr*2.3, sig_it, sig_ct) * 1.35
+        fig.update_layout(template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)",
+                          plot_bgcolor="rgba(15,23,42,0.6)",
+                          xaxis=dict(range=[-lim, lim], title="In-Track (m)"),
+                          yaxis=dict(range=[-lim, lim], scaleanchor="x", title="Cross-Track (m)"),
+                          height=390, margin=dict(t=15, b=35))
+        st.plotly_chart(fig, use_container_width=True)
+
+    # Advanced CAM
+    st.markdown("---")
+    st.markdown("### 🚀 Advanced Collision Avoidance Maneuver Engine")
+
+    target_sep = st.slider("Target Safe Separation (m)", 250, 10000, 1600, 50)
+
+    miss = float(threat["miss_distance_m"])
+    needed = max(0.0, target_sep - miss)
+    t_hours = max(float(threat["hours_to_tca"]), 0.35)
+    t_sec = t_hours * 3600.0
+
+    dv = (needed / max(t_sec, 1.0)) * 2.55
+    fuel = dv * 0.95
+    required = needed > 35
+
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("ΔV Required", f"{dv:.3f} m/s")
+    m2.metric("Est. Fuel", f"{fuel:.2f} kg")
+    m3.metric("Time Window", f"{t_hours:.1f} h")
+    m4.metric("Decision", "REQUIRED" if required else "SAFE")
+
+    if required:
+        st.error(f"Maneuver **REQUIRED** to reach {target_sep} m from current {miss:.0f} m.")
+    else:
+        st.success(f"Current miss distance ({miss:.0f} m) already exceeds target ({target_sep} m). Maneuver not required.")
+
+# ─── TAB 4: 3D GEOMETRY ──────────────────────
+with tab4:
+    st.subheader("3D Relative Geometry & Orbital Context")
+    
+    fig3d = go.Figure()
+
+    u = np.linspace(0, 2*np.pi, 50)
+    v = np.linspace(0, np.pi, 50)
+    r_earth = 6371
+    scale = 0.05 
+    x = r_earth * scale * np.outer(np.cos(u), np.sin(v))
+    y = r_earth * scale * np.outer(np.sin(u), np.sin(v))
+    z = r_earth * scale * np.outer(np.ones(np.size(u)), np.cos(v))
+
+    fig3d.add_trace(go.Surface(x=x, y=y, z=z, colorscale='Blues', showscale=False, opacity=0.5, name='Earth'))
+    fig3d.add_trace(go.Scatter3d(x=[0], y=[0], z=[0], mode='markers+text', marker=dict(size=8, color='cyan'), text=['Primary'], textposition='top center', name='Primary'))
+
+    it_3d = threat['in_track_m'] / 1000.0 
+    ct_3d = threat['cross_track_m'] / 1000.0
+    rd_3d = threat['radial_m'] / 1000.0
+    vis_scale = 0.5
+    
+    fig3d.add_trace(go.Scatter3d(x=[rd_3d * vis_scale], y=[it_3d * vis_scale], z=[ct_3d * vis_scale], mode='markers+text',
+                                 marker=dict(size=10, color='red' if threat['risk']=='RED' else 'orange'),
+                                 text=[threat['secondary_object']], textposition='top center', name='Threat'))
+    fig3d.add_trace(go.Scatter3d(x=[0, rd_3d * vis_scale], y=[0, it_3d * vis_scale], z=[0, ct_3d * vis_scale],
+                                 mode='lines', line=dict(color='gray', width=3, dash='dash'), name='Relative Vector'))
+
+    fig3d.update_layout(
+        scene=dict(
+            xaxis_title='Radial (km)', yaxis_title='In-Track (km)', zaxis_title='Cross-Track (km)',
+            bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="#334155"),
+            yaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="#334155"),
+            zaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="#334155"),
+        ),
+        template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", height=600, margin=dict(l=0, r=0, b=0, t=0)
+    )
+    st.plotly_chart(fig3d, use_container_width=True)
+
+# ─── TAB 5: MISSION REPORT ───────────────────
+with tab5:
+    st.subheader("Official Mission & Maneuver Report")
+    
+    if st.button("📄 Generate PDF Report", type="primary", use_container_width=True):
+        if PDF_AVAILABLE:
+            with st.spinner("Compiling PDF..."):
+                t_hours_pdf = max(float(threat["hours_to_tca"]), 0.35)
+                t_sec_pdf = t_hours_pdf * 3600.0
+                miss_pdf = float(threat["miss_distance_m"])
+                needed_pdf = max(0.0, 1600 - miss_pdf)
+                dv_pdf = (needed_pdf / max(t_sec_pdf, 1.0)) * 2.55
+                fuel_pdf = dv_pdf * 0.95
+
+                pdf_bytes = generate_pdf(threat, dv_pdf, fuel_pdf, 1600)
+                
+                st.download_button(
+                    label="📥 Download Aura Report PDF",
+                    data=pdf_bytes,
+                    file_name=f"Aura_Report_{str(threat['secondary_object']).split()[0]}.pdf",
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+                st.success("✅ Report generated successfully!")
+        else:
+            st.error("PDF generator is not available. Please run `pip install fpdf2` in your environment to enable this feature.")
+
+st.divider()
+st.caption(f"Connected to: {CLOUD_API} | AURA-SHIELD v28.0 Enterprise")
