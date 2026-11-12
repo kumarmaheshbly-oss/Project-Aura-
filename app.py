@@ -459,7 +459,8 @@ with tab3:
 
     with right:
         st.markdown("##### B-Plane + Covariance")
-        it, ct = threat["in_track_m"], threat["cross_track_m"]
+        it = threat["in_track_m"]
+        ct = threat["cross_track_m"]
         theta = np.linspace(0, 2*np.pi, 90)
 
         fig = go.Figure()
@@ -470,4 +471,4 @@ with tab3:
         sig_ct = max(abs(ct)*0.2, 100)
         fig.add_trace(go.Scatter(x=it + sig_it*np.cos(theta), y=ct + sig_ct*np.sin(theta),
                                  mode="lines", name="≈1σ Cov", line=dict(color="#38bdf8", width=1.5, dash="dot"),
-                                 fill="toself", 
+                                 fill="t
